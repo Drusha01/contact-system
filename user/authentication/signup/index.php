@@ -54,12 +54,20 @@ require_once ROOT_PATH.'components\header\guest.php';
                 type: 'post',
                 dataType: 'json',
                 data: $('form#signUpForm').serialize(),
-                success: function(data) {
-                    if(data == 1){
+                success: function(result) {
+                    if(result.response == 1){
                         window.location.href = '/user/authentication/thank-you-for-registering';
                     }else{
-                        alert(data);
+                        Swal.fire({
+                            position: "center",
+                            icon: "warning",
+                            title: result.response,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
                     }
+                },error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    alert("Status: " + textStatus); alert("Error: " + errorThrown); 
                 }
             });
         });

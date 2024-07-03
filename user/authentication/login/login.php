@@ -3,8 +3,10 @@ require_once '..\..\..\assets\contants\contants.php';
 require_once ROOT_PATH.'middleware\isLoggedIn.php';
 include_once ROOT_PATH.'assets\database\database.php';
 $db = new Database();
+header('Content-Type: application/json; charset=utf-8');
 if(!isset($_POST['email'])){
-    echo 'Email is required';
+    echo json_encode(['response'=>'Email is required']);
+    return;
 }else{
     $email = $_POST['email'];
     $sql = 'SELECT * FROM users 
@@ -18,12 +20,12 @@ if(!isset($_POST['email'])){
             if($data){
                 if (password_verify($_POST['password'], $data['password'])) {
                     $_SESSION['user_id'] = $data['id'];
-                    echo '1';
+                    echo json_encode(['response'=>'1']);
                     return ;
                 }
             }
         }
-        echo 'Email or Password is incorrect';
+        echo json_encode(['response'=>'Email or Password is incorrect']);
     }
     return;
 }

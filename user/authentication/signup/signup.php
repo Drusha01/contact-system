@@ -3,52 +3,54 @@ require_once '..\..\..\assets\contants\contants.php';
 require_once ROOT_PATH.'middleware\isLoggedIn.php';
 include_once ROOT_PATH.'assets\database\database.php';
 $db = new Database();
+header('Content-Type: application/json; charset=utf-8');
 if(!isset($_POST['username'])){
-    echo 'Username is required';
+    echo json_encode(['response'=>'Username is required']);
     return ;
-}
-if(isset($_POST['confirmpassword'])){
-    if(strlen($_POST['confirmpassword']) < 8 ) {
-        echo 'confirm password less than 8';
-        return;
-    }
-    elseif(!preg_match("#[0-9]+#",$_POST['confirmpassword'])) {
-        echo 'confirm password must contain numbers';
-        return;
-    }
-    elseif(!preg_match("#[A-Z]+#",$_POST['confirmpassword'])) {
-        echo 'password must have 1 uppercase letter';
-        return;
-    }
-    elseif(!preg_match("#[a-z]+#",$_POST['confirmpassword'])) {
-        echo 'confirm password must have 1 lowercase letter';
-        return;
-    }
 }
 if(isset($_POST['password'])){
     if(strlen($_POST['password']) < 8 ) {
-        echo 'password less than 8';
+        echo json_encode(['response'=>'Password less than 8']);
         return;
     }
     elseif(!preg_match("#[0-9]+#",$_POST['password'])) {
-        echo 'password must contain numbers';
+        echo json_encode(['response'=>'Password must contain numbers']);
         return;
     }
     elseif(!preg_match("#[A-Z]+#",$_POST['password'])) {
-        echo 'password must have 1 uppercase letter';
+        echo json_encode(['response'=>'Password must have 1 uppercase letter']);
         return;
     }
     elseif(!preg_match("#[a-z]+#",$_POST['password'])) {
-        echo 'password must have 1 lowercase letter';
+        echo json_encode(['response'=>'Password must have 1 lowercase letter']);
         return;
     }
 }
+if(isset($_POST['confirmpassword'])){
+    if(strlen($_POST['confirmpassword']) < 8 ) {
+        echo json_encode(['response'=>'Confirm password less than 8']);
+        return;
+    }
+    elseif(!preg_match("#[0-9]+#",$_POST['confirmpassword'])) {
+        echo json_encode(['response'=>'Confirm password must contain numbers']);
+        return;
+    }
+    elseif(!preg_match("#[A-Z]+#",$_POST['confirmpassword'])) {
+        echo json_encode(['response'=>'Confirm password must have 1 uppercase letter']);
+        return;
+    }
+    elseif(!preg_match("#[a-z]+#",$_POST['confirmpassword'])) {
+        echo json_encode(['response'=>'Confirm password must have 1 lowercase letter']);
+        return;
+    }
+}
+
 if($_POST['password'] != $_POST['confirmpassword']){
-    echo 'Password doesn\' match';
+    echo json_encode(['response'=>'Password doesn\' match']);
     return;
 }
 if(!isset($_POST['email'])){
-    echo 'Email is required';
+    echo json_encode(['response'=>'Email is required']);
 }else{
     $email = $_POST['email'];
     $sql = 'SELECT * FROM users 
@@ -59,7 +61,7 @@ if(!isset($_POST['email'])){
     if($query->execute()){
         $data =  $query->fetch();
         if($data){
-            echo $email.' exist in the system';
+            echo json_encode(['response'=>$email.' exist in the system']);
             return ;
         }
     }
@@ -92,7 +94,7 @@ $sql = "INSERT INTO `users`(`id`, `email`, `username`, `password`, `is_active`, 
                 $_SESSION['user_id'] = $data['id'];
             }
         }
-        echo '1';
+        echo json_encode(['response'=>'1']);
         return ;
     }
 ?>

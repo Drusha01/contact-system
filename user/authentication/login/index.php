@@ -17,11 +17,11 @@ require_once ROOT_PATH.'components\header\guest.php';
                             <form id="signUpForm">
                                 <div class="mb-1">
                                     <label for="email" class="form-label">Email</label>
-                                    <input class="form-control" type="text" id="email"  placeholder="Enter name" name="email">
+                                    <input class="form-control" type="text" id="email" required  placeholder="Enter name" name="email">
                                 </div>
                                 <div class="mb-1">
                                     <label for="password" class="form-label">Password</label>
-                                    <input class="form-control" type="password" id="password"  placeholder="Enter password" name="password">
+                                    <input class="form-control" type="password" id="password" required placeholder="Enter password" name="password">
                                 </div>
                                 <div class="d-grid gap-2 mt-2">
                                     <button type="submit" class="btn btn-block btn-primary ">Login</button>
@@ -36,7 +36,7 @@ require_once ROOT_PATH.'components\header\guest.php';
             </div>
         </div>
     </div>
-    <script>
+    <script type="text/javascript">
         $( "#signUpForm" ).on( "submit", function( event ) {
             event.preventDefault();
             $.ajax({
@@ -44,12 +44,29 @@ require_once ROOT_PATH.'components\header\guest.php';
                 type: 'post',
                 dataType: 'json',
                 data: $('form#signUpForm').serialize(),
-                success: function(data) {
-                    if(data == '1'){
-                        window.location.href = '/user/contact/';
+                success: function(result) {
+                    if(result.response == 1){
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: 'Welcome back',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function() {
+                            window.location.href = '/user/contact/';
+                        });
                     }else{
-                        alert(data);
+                        Swal.fire({
+                        position: "center",
+                        icon: "warning",
+                        title: result.response,
+                        showConfirmButton: false,
+                        timer: 1500
+                        });
                     }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    alert("Status: " + textStatus); alert("Error: " + errorThrown); 
                 }
             });
         });
