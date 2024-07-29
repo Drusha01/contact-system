@@ -51,6 +51,7 @@ if($_POST['password'] != $_POST['confirmpassword']){
 }
 if(!isset($_POST['email'])){
     echo json_encode(['response'=>'Email is required']);
+    return;
 }else{
     $email = $_POST['email'];
     $sql = 'SELECT * FROM users 

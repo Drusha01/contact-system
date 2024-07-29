@@ -53,7 +53,7 @@ require_once ROOT_PATH.'components\header\guest.php';
                             showConfirmButton: false,
                             timer: 1500
                         }).then(function() {
-                            window.location.href = '/user/contact/';
+                            window.location.href = '/user/contacts/';
                         });
                     }else{
                         Swal.fire({

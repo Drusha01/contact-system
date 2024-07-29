@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS `contacts`;
 CREATE TABLE IF NOT EXISTS `contacts` (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    name VARCHAR(100) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
     company VARCHAR(100) ,
     phone VARCHAR(15) ,
     email VARCHAR(100) ,

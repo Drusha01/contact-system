@@ -7,13 +7,13 @@
         <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="../../user/contacts/add">Add contact</a>
+                    <a class="nav-link active" aria-current="page" href="/user/contacts/add">Add contact</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../../user/contacts">Contacts</a>
+                    <a class="nav-link" href="/user/contacts">Contacts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../../user/authentication/logout">Logout</a>
+                    <a class="nav-link" href="/user/authentication/logout">Logout</a>
                 </li>
             </ul>
         </div>

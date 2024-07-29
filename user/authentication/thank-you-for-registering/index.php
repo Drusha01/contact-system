@@ -16,7 +16,7 @@ require_once ROOT_PATH.'components\header\guest.php';
                             </h3>
                         </div>
                         <div class="row text-center my-2">
-                            <a href="../../contact/"  class="text-dark"><button class="btn btn-outline-secondary">Continue</button></a>
+                            <a href="../../contacts/"  class="text-dark"><button class="btn btn-outline-secondary">Continue</button></a>
                         </div>
                     </div>
                 </div>
