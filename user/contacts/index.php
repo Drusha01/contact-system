@@ -15,9 +15,48 @@
         'email' => NULL,
     ];
 
+    $page = 1;
+    if(isset($_GET['page'])){
+        $page = intval($_GET['page']);
+    }
+    $per_page = 2;
+    if(isset($_GET['per_page'])){
+        $per_page = intval($_GET['per_page']);
+    }
+    
+
     try{
-        $sql = "SELECT id,user_id,name,company,phone,email,is_active,date_created,date_updated FROM contacts
+        $sql = "SELECT count(*) as count FROM contacts
             WHERE user_id = :user_id";
+        $query=$db->connect()->prepare($sql);
+        $query->bindParam(':user_id', $contact['user_id']);
+        if($query->execute()){
+            $item_count = $query->fetch()['count'];
+        }
+    }catch (PDOException $e){
+        return false;
+    }
+    
+    $prev_page = null;
+    if($page > 1){
+        $prev_page = $page-1;
+    }else{
+        $prev_page = $page;
+    }
+    
+    $next_page = intval($item_count/ $per_page )+1;
+    if($page <= $item_count/ $per_page ){
+        
+    }
+
+    try{
+        $offset = $per_page * ($page-1);
+        $limit = $per_page;
+        $sql = "SELECT id,user_id,name,company,phone,email,is_active,date_created,date_updated FROM contacts
+            WHERE user_id = :user_id
+            ORDER BY id DESC
+            LIMIT ".$limit." OFFSET ".$offset."
+            ";
         $query=$db->connect()->prepare($sql);
         $query->bindParam(':user_id', $contact['user_id']);
         if($query->execute()){
@@ -26,6 +65,37 @@
     }catch (PDOException $e){
         return false;
     }
+
+    
+
+    $paginate = [
+        'active_page'=> [
+            'page_number'=>$page,
+            'id'=> NULL,
+        ],
+        'prev_page'=> [
+            'page_number'=>$prev_page,
+            'id'=> NULL,
+        ],
+        'next_page'=> [
+            'page_number'=>$next_page,
+            'id'=> NULL,
+        ],
+        'start_page'=> [
+            'page_number'=>1,
+            'id'=> NULL,
+        ],
+        'end_page'=> [
+            'page_number'=>1,
+            'id'=> NULL,
+        ],
+        'item_count'=> $item_count,
+        'per_page'=>$per_page,
+        'data'=> $table_data,
+    ];
+
+
+    
 ?>
 
     <div class="container-fluid">
@@ -62,7 +132,7 @@
                     </thead>
                     <tbody>
                         <?php 
-                            foreach ($table_data as $key => $value) {
+                            foreach ($paginate['data'] as $key => $value) {
                                 echo '<tr>';
                                 echo '<td>'.($key+1).'</td>';
                                 echo '<td>'.$value['name'].'</td>';
@@ -84,17 +154,46 @@
         </div>
         <div class="row d-flex justify-content-center">
             <div class="col-12 d-flex justify-content-center">
-                <a href="">
-                    <button class="btn btn-secondary mx-1">1</button>
+                <a href="/user/contacts/?page=<?php echo $paginate['prev_page']['page_number'] ?>">
+                    <button class="btn btn-outline-secondary mx-1"><</button>
                 </a>
+                <?php 
+                    if(intval($paginate['item_count']/$paginate['per_page'])){
+                        $by_side = 3;
+                        if($paginate['active_page']['page_number']>1){
+                            $temp_page = $paginate['active_page']['page_number']-$by_side;
+                            while($temp_page+1 < $paginate['active_page']['page_number']){
+                                $temp_page++;
+                                if($temp_page){
+                                    echo '
+                                    <a href="/user/contacts/?page='.($temp_page).'">
+                                        <button class="btn btn-outline-secondary mx-1">'.($temp_page).'</button>
+                                    </a>
+                                    ';
+                                }
+                            }
+                        }
+                    }
+                ?>
                 <a href="">
-                    <button class="btn btn-outline-secondary mx-1">2</button>
+                    <button class="btn btn-secondary mx-1"><?php echo $paginate['active_page']['page_number'] ?></button>
                 </a>
-                <a href="">
-                    <button class="btn btn-outline-secondary mx-1">3</button>
-                </a>
-                <a href="">
-                    <button class="btn btn-outline-secondary mx-1">Next</button>
+                <?php 
+                if(($paginate['per_page']*$paginate['active_page']['page_number'] ) < $paginate['item_count']){
+                    $by_side = 3;
+                    $temp_page = $paginate['active_page']['page_number'];
+                    while(($paginate['per_page'] * ($temp_page)) < $paginate['item_count']){
+                        $temp_page++;
+                        echo '
+                        <a href="/user/contacts/?page='.($temp_page).'">
+                            <button class="btn btn-outline-secondary mx-1">'.($temp_page).'</button>
+                        </a>
+                        ';
+                    }
+                }
+                ?>
+                <a href="/user/contacts/?page=<?php echo $paginate['next_page']['page_number'] ?>">
+                    <button class="btn btn-outline-secondary mx-1">></button>
                 </a>
             </div>
         </div>
